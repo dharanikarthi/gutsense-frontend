@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration Test - GutSense</title>
+    <script src="config.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+    </style>
+</head>
+<body>
+    <h1>🧪 GutSense API Integration Test</h1>
+    <p>This page tests the connection between the deployed frontend and backend.</p>
+    
+    <div id="results"></div>
+    
+    <button onclick="runTests()">🔄 Run Tests Again</button>
+
+    <script>
+        async function runTests() {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '<div class="info">🔍 Running API integration tests...</div>';
+            
+            // Test 1: Basic connectivity
+            try {
+                console.log('Testing API Base URL:', CONFIG.API_BASE_URL);
+                
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/health');
+                const data = await response.json();
+                
+                resultsDiv.innerHTML += `
+                    <div class="success">
+                        ✅ <strong>Health Check Success!</strong><br>
+                        Status: ${data.status}<br>
+                        Version: ${data.version}<br>
+                        Database: ${data.database}
+                    </div>
+                `;
+                
+                // Test 2: Root endpoint
+                const rootResponse = await fetch(CONFIG.API_BASE_URL + '/');
+                const rootData = await rootResponse.json();
+                
+                resultsDiv.innerHTML += `
+                    <div class="success">
+                        ✅ <strong>Root Endpoint Success!</strong><br>
+                        Message: ${rootData.message}<br>
+                        Status: ${rootData.status}
+                    </div>
+                `;
+                
+                resultsDiv.innerHTML += `
+                    <div class="success">
+                        🎉 <strong>All Tests Passed!</strong><br>
+                        Frontend can successfully communicate with backend.<br>
+                        CORS is properly configured.
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error('API Test Failed:', error);
+                resultsDiv.innerHTML += `
+                    <div class="error">
+                        ❌ <strong>API Test Failed!</strong><br>
+                        Error: ${error.message}<br>
+                        Check browser console for details.
+                    </div>
+                `;
+            }
+        }
+
+        // Run tests when page loads
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>
