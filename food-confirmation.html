@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Confirmation - GutSense</title>
+    <link rel="stylesheet" href="enhanced-styles.css">
+    <link rel="stylesheet" href="confirmation-styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-card">
+            <!-- Progress Indicator -->
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <p class="progress-text">Step 2 of 3</p>
+            </div>
+
+            <div class="ai-success-badge">
+                <span class="ai-icon">🤖</span>
+                <span>AI Detection Complete</span>
+            </div>
+
+            <h1 class="main-heading">Is this correct?</h1>
+            
+            <p class="helper-text">
+                Our AI identified this food from your image. Please confirm or edit if needed.
+            </p>
+
+            <!-- Detected Food Card -->
+            <div class="detected-food-card">
+                <div class="food-image-preview"></div>
+                <div class="food-details">
+                    <h2 class="detected-name" id="detectedName">Tomato Rice</h2>
+                    <p class="detection-confidence">95% confidence</p>
+                    <p class="detection-note">Our AI identified this food from your image.</p>
+                </div>
+                <div class="accuracy-badge">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="confirmation-actions">
+                <button type="button" class="confirm-button" onclick="confirmFood()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 12l2 2 4-4"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    Confirm food
+                </button>
+                
+                <button type="button" class="edit-button" onclick="editFood()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                    </svg>
+                    Edit food name
+                </button>
+            </div>
+
+            <!-- Edit Mode (hidden initially) -->
+            <div class="edit-mode" id="editMode" style="display: none;">
+                <div class="edit-input-section">
+                    <label for="foodNameEdit">Food name:</label>
+                    <input type="text" id="foodNameEdit" class="food-name-edit" value="Tomato Rice" placeholder="Enter correct food name">
+                </div>
+                
+                <div class="edit-actions">
+                    <button type="button" class="save-edit-button" onclick="saveEdit()">
+                        Save changes
+                    </button>
+                    <button type="button" class="cancel-edit-button" onclick="cancelEdit()">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Accuracy Help -->
+            <div class="accuracy-help">
+                <div class="help-icon">💡</div>
+                <p>This helps improve accuracy for future detections.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set food image preview (simulate from previous page)
+        document.addEventListener('DOMContentLoaded', () => {
+            const preview = document.querySelector('.food-image-preview');
+            // In a real app, this would come from the previous page's uploaded image
+            preview.style.backgroundImage = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)';
+        });
+
+        function confirmFood() {
+            // Show loading and navigate to result
+            showAnalysisLoading();
+            setTimeout(() => {
+                window.location.href = 'gut-result.html';
+            }, 2000);
+        }
+
+        function editFood() {
+            document.getElementById('editMode').style.display = 'block';
+            document.querySelector('.confirmation-actions').style.display = 'none';
+            document.getElementById('foodNameEdit').focus();
+        }
+
+        function saveEdit() {
+            const newName = document.getElementById('foodNameEdit').value.trim();
+            if (newName) {
+                document.getElementById('detectedName').textContent = newName;
+                document.querySelector('.detection-confidence').textContent = 'User corrected';
+                cancelEdit();
+            }
+        }
+
+        function cancelEdit() {
+            document.getElementById('editMode').style.display = 'none';
+            document.querySelector('.confirmation-actions').style.display = 'flex';
+        }
+
+        function showAnalysisLoading() {
+            const card = document.querySelector('.confirmation-card');
+            card.innerHTML = `
+                <div class="final-analysis-loading">
+                    <div class="analysis-brain">
+                        <div class="brain-pulse"></div>
+                        🧠
+                    </div>
+                    <h2>Analyzing gut impact...</h2>
+                    <p>Processing food data against your gut profile</p>
+                    <div class="analysis-steps">
+                        <div class="step active">🔍 Food confirmed: Tomato Rice</div>
+                        <div class="step">🧬 Analyzing ingredients</div>
+                        <div class="step">👤 Checking your gut profile</div>
+                        <div class="step">💚 Generating recommendations</div>
+                    </div>
+                </div>
+            `;
+
+            // Animate through steps
+            const steps = document.querySelectorAll('.step');
+            let currentStep = 0;
+            
+            const stepInterval = setInterval(() => {
+                if (currentStep > 0) {
+                    steps[currentStep - 1].classList.remove('active');
+                    steps[currentStep - 1].classList.add('completed');
+                }
+                if (currentStep < steps.length) {
+                    steps[currentStep].classList.add('active');
+                    currentStep++;
+                } else {
+                    clearInterval(stepInterval);
+                }
+            }, 500);
+        }
+
+        // Add entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.detected-food-card, .confirmation-actions, .accuracy-help');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+                element.classList.add('fade-in');
+            });
+        });
+    </script>
+</body>
+</html>

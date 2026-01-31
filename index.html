@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gut Profile - GutSense</title>
+    <link rel="stylesheet" href="enhanced-styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-card">
+            <!-- Progress Indicator -->
+            <div class="progress-section">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+                <p class="progress-text">Step 1 of 2</p>
+            </div>
+
+            <h1 class="main-heading">Tell us about your gut health</h1>
+            
+            <p class="helper-text">
+                Select any digestive sensitivities you experience. GutSense uses this to personalize food recommendations.
+            </p>
+
+            <form class="gut-profile-form">
+                <div class="sensitivities-section">
+                    <h3 class="section-title">Your gut sensitivities</h3>
+                    <div class="condition-cards">
+                        <div class="condition-card" data-value="acidity">
+                            <div class="card-icon">🔥</div>
+                            <div class="card-content">
+                                <h4>Acidity</h4>
+                                <p>Acid reflux & heartburn</p>
+                            </div>
+                            <input type="checkbox" name="sensitivities" value="acidity" hidden>
+                        </div>
+                        
+                        <div class="condition-card" data-value="ibs">
+                            <div class="card-icon">⚡</div>
+                            <div class="card-content">
+                                <h4>IBS</h4>
+                                <p>Irritable Bowel Syndrome</p>
+                            </div>
+                            <input type="checkbox" name="sensitivities" value="ibs" hidden>
+                        </div>
+                        
+                        <div class="condition-card" data-value="ulcer">
+                            <div class="card-icon">🛡️</div>
+                            <div class="card-content">
+                                <h4>Ulcer sensitivity</h4>
+                                <p>Stomach ulcer concerns</p>
+                            </div>
+                            <input type="checkbox" name="sensitivities" value="ulcer" hidden>
+                        </div>
+                        
+                        <div class="condition-card" data-value="lactose">
+                            <div class="card-icon">🥛</div>
+                            <div class="card-content">
+                                <h4>Lactose intolerance</h4>
+                                <p>Dairy sensitivity</p>
+                            </div>
+                            <input type="checkbox" name="sensitivities" value="lactose" hidden>
+                        </div>
+                        
+                        <div class="condition-card" data-value="sensitive">
+                            <div class="card-icon">💨</div>
+                            <div class="card-content">
+                                <h4>Sensitive digestion</h4>
+                                <p>Bloating & discomfort</p>
+                            </div>
+                            <input type="checkbox" name="sensitivities" value="sensitive" hidden>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="spice-section">
+                    <h3 class="section-title">Spice tolerance level</h3>
+                    <div class="spice-slider-container">
+                        <div class="spice-icons">
+                            <span class="spice-icon mild">🌶️</span>
+                            <span class="spice-icon medium">🌶️🌶️</span>
+                            <span class="spice-icon hot">🌶️🌶️🌶️</span>
+                        </div>
+                        <input type="range" class="spice-slider" min="1" max="3" value="2" id="spiceRange">
+                        <div class="slider-labels">
+                            <span>Low</span>
+                            <span>Medium</span>
+                            <span>High</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="additional-section">
+                    <label for="additional" class="section-title">Anything else your gut reacts to?</label>
+                    <input type="text" id="additional" name="additional" placeholder="e.g., gluten, caffeine, artificial sweeteners..." class="additional-input">
+                </div>
+
+                <button type="button" class="save-button" onclick="saveProfile()">Save & Continue</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Handle condition card selection
+        document.querySelectorAll('.condition-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const checkbox = card.querySelector('input[type="checkbox"]');
+                checkbox.checked = !checkbox.checked;
+                card.classList.toggle('selected', checkbox.checked);
+            });
+        });
+
+        // Handle spice slider visual feedback
+        const spiceSlider = document.getElementById('spiceRange');
+        const spiceIcons = document.querySelectorAll('.spice-icon');
+
+        spiceSlider.addEventListener('input', (e) => {
+            const value = parseInt(e.target.value);
+            spiceIcons.forEach((icon, index) => {
+                icon.classList.toggle('active', index + 1 === value);
+            });
+        });
+
+        // Initialize spice slider
+        spiceIcons[1].classList.add('active'); // Medium by default
+
+        function saveProfile() {
+            // Navigate to Dashboard page
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>

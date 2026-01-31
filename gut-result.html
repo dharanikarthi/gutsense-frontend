@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gut Result - GutSense</title>
+    <link rel="stylesheet" href="enhanced-styles.css">
+    <link rel="stylesheet" href="gut-result-enhanced.css">
+</head>
+<body>
+    <div class="container">
+        <div class="result-card">
+            <h1 class="main-heading">Your gut-friendly result</h1>
+            
+            <!-- Large Result Card -->
+            <div class="result-badge-large safe" id="resultBadge">
+                <div class="badge-icon-large">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M9 12l2 2 4-4"/>
+                        <circle cx="12" cy="12" r="10"/>
+                    </svg>
+                </div>
+                <div class="badge-content">
+                    <h2 class="badge-title">Safe</h2>
+                    <p class="badge-subtitle">Great choice for your gut!</p>
+                </div>
+            </div>
+
+            <!-- Confidence Meter -->
+            <div class="confidence-section">
+                <h3 class="section-title">Gut Score</h3>
+                <div class="confidence-meter">
+                    <div class="meter-track">
+                        <div class="meter-fill" style="width: 85%"></div>
+                    </div>
+                    <div class="meter-labels">
+                        <span>0</span>
+                        <span class="meter-score">85/100</span>
+                        <span>100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Detection -->
+            <div class="food-detection">
+                <label class="detection-label">Food detected:</label>
+                <p class="detected-food" id="detectedFood">Grilled Chicken Salad</p>
+            </div>
+
+            <!-- Explanation -->
+            <div class="explanation-section">
+                <h3 class="section-title">Why this matters for your gut</h3>
+                <p class="explanation-text" id="explanationText">
+                    This food looks great for your gut! Based on your profile, grilled chicken salad contains lean protein and fresh vegetables that are gentle on digestion. The ingredients are unlikely to trigger your sensitivities.
+                </p>
+            </div>
+
+            <!-- Tips as Cards -->
+            <div class="tips-section">
+                <h3 class="section-title">Helpful tips</h3>
+                <div class="tip-cards">
+                    <div class="tip-card">
+                        <div class="tip-icon">🥗</div>
+                        <div class="tip-content">
+                            <h4>Enhancement tip</h4>
+                            <p>Try adding olive oil and lemon juice as dressing for better nutrient absorption.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="tip-card">
+                        <div class="tip-icon">⏰</div>
+                        <div class="tip-content">
+                            <h4>Timing tip</h4>
+                            <p>Best enjoyed as a lunch meal when your digestive system is most active.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button type="button" class="primary-action-button" onclick="checkAnotherFood()">
+                    Check another food
+                </button>
+                <button type="button" class="secondary-action-button" onclick="saveToHistory()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Save to history
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Demo function to show different result states
+        function showDemoResults() {
+            const results = [
+                {
+                    status: 'safe',
+                    score: 85,
+                    food: 'Grilled Chicken Salad',
+                    explanation: 'This food looks great for your gut! Based on your profile, grilled chicken salad contains lean protein and fresh vegetables that are gentle on digestion. The ingredients are unlikely to trigger your sensitivities.',
+                    tips: [
+                        { icon: '🥗', title: 'Enhancement tip', text: 'Try adding olive oil and lemon juice as dressing for better nutrient absorption.' },
+                        { icon: '⏰', title: 'Timing tip', text: 'Best enjoyed as a lunch meal when your digestive system is most active.' }
+                    ],
+                    icon: '<path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>',
+                    title: 'Safe',
+                    subtitle: 'Great choice for your gut!'
+                },
+                {
+                    status: 'caution',
+                    score: 45,
+                    food: 'Spicy Pasta',
+                    explanation: 'This food might need some consideration. The spices and tomato sauce could potentially trigger acid reflux based on your profile. The pasta itself is generally fine, but the preparation might cause some discomfort.',
+                    tips: [
+                        { icon: '🥛', title: 'Pairing tip', text: 'Consider having with plain bread or yogurt to help neutralize the acidity.' },
+                        { icon: '🍽️', title: 'Portion tip', text: 'Try a smaller portion and eat slowly to reduce potential discomfort.' }
+                    ],
+                    icon: '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+                    title: 'Eat with caution',
+                    subtitle: 'May cause some discomfort'
+                },
+                {
+                    status: 'avoid',
+                    score: 15,
+                    food: 'Dairy Ice Cream',
+                    explanation: 'This food might not be the best choice right now. Based on your lactose intolerance profile, dairy ice cream could cause digestive discomfort including bloating and stomach upset.',
+                    tips: [
+                        { icon: '🥥', title: 'Alternative tip', text: 'Try lactose-free ice cream made from coconut, almond, or oat milk.' },
+                        { icon: '🍓', title: 'Substitute tip', text: 'Consider frozen yogurt or fruit sorbet as a gut-friendly dessert option.' }
+                    ],
+                    icon: '<circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/>',
+                    title: 'Avoid',
+                    subtitle: 'Not recommended for you'
+                }
+            ];
+
+            let currentIndex = 0;
+            
+            setInterval(() => {
+                const result = results[currentIndex];
+                updateResult(result);
+                currentIndex = (currentIndex + 1) % results.length;
+            }, 8000);
+        }
+
+        function updateResult(result) {
+            const badge = document.getElementById('resultBadge');
+            const food = document.getElementById('detectedFood');
+            const explanation = document.getElementById('explanationText');
+            const meterFill = document.querySelector('.meter-fill');
+            const meterScore = document.querySelector('.meter-score');
+
+            // Update badge
+            badge.className = `result-badge-large ${result.status}`;
+            badge.querySelector('.badge-title').textContent = result.title;
+            badge.querySelector('.badge-subtitle').textContent = result.subtitle;
+            badge.querySelector('svg').innerHTML = result.icon;
+
+            // Update content
+            food.textContent = result.food;
+            explanation.textContent = result.explanation;
+            
+            // Update confidence meter
+            meterFill.style.width = `${result.score}%`;
+            meterScore.textContent = `${result.score}/100`;
+
+            // Update tips
+            const tipCards = document.querySelector('.tip-cards');
+            tipCards.innerHTML = result.tips.map(tip => `
+                <div class="tip-card">
+                    <div class="tip-icon">${tip.icon}</div>
+                    <div class="tip-content">
+                        <h4>${tip.title}</h4>
+                        <p>${tip.text}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function checkAnotherFood() {
+            window.location.href = 'food-check.html';
+        }
+
+        function saveToHistory() {
+            // Show success feedback
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '✓ Saved!';
+            button.style.background = '#27ae60';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = '';
+            }, 2000);
+        }
+
+        // Start demo on page load (uncomment to enable)
+        // showDemoResults();
+
+        // Add entrance animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const elements = document.querySelectorAll('.result-badge-large, .confidence-section, .food-detection, .explanation-section, .tips-section, .action-buttons');
+            elements.forEach((element, index) => {
+                element.style.animationDelay = `${index * 0.1}s`;
+                element.classList.add('fade-in');
+            });
+        });
+    </script>
+</body>
+</html>

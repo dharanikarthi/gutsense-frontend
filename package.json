@@ -1,0 +1,17 @@
+{
+  "name": "gutsense-frontend",
+  "version": "1.0.0",
+  "description": "GutSense - AI-powered gut health food advisor frontend",
+  "main": "index.html",
+  "scripts": {
+    "dev": "serve -s . -l 3000",
+    "build": "echo 'Static site - no build needed'",
+    "start": "serve -s . -l 3000"
+  },
+  "keywords": ["gut-health", "food-advisor", "health", "nutrition"],
+  "author": "dharanikarthi",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}

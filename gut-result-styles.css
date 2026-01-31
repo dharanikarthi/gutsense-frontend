@@ -1,0 +1,248 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #2c3e50;
+}
+
+.container {
+    width: 100%;
+    max-width: 520px;
+}
+
+.result-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 32px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-align: center;
+}
+
+.main-heading {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 32px;
+    line-height: 1.3;
+}
+
+/* Result Badge Styles */
+.result-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 32px;
+    transition: all 0.3s ease;
+}
+
+.result-badge.safe {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+    border: 2px solid #b8dacc;
+}
+
+.result-badge.caution {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+    border: 2px solid #f0d43a;
+}
+
+.result-badge.avoid {
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+    border: 2px solid #f1b0b7;
+}
+
+.badge-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Food Detection */
+.food-detection {
+    text-align: left;
+    margin-bottom: 24px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border-left: 4px solid #27ae60;
+}
+
+.detection-label {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    font-weight: 500;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.detected-food {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Explanation Section */
+.explanation-section {
+    text-align: left;
+    margin-bottom: 28px;
+}
+
+.explanation-text {
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #34495e;
+    margin: 0;
+}
+
+/* Tips Section */
+.tips-section {
+    text-align: left;
+    background: #f0f8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 32px;
+    border: 1px solid #d4edda;
+}
+
+.tips-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #27ae60;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tips-title::before {
+    content: '💡';
+    font-size: 1.2rem;
+}
+
+.tip-content {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.tip-icon {
+    color: #27ae60;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.tip-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Action Button */
+.check-another-button {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 2px solid #bdc3c7;
+    padding: 16px 32px;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.check-another-button:hover {
+    background: #d5dbdb;
+    border-color: #95a5a6;
+    transform: translateY(-1px);
+}
+
+.check-another-button:active {
+    transform: translateY(0);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .result-card {
+        padding: 32px 24px;
+    }
+    
+    .main-heading {
+        font-size: 1.8rem;
+    }
+    
+    .result-badge {
+        font-size: 1.1rem;
+        padding: 14px 20px;
+    }
+    
+    .detected-food {
+        font-size: 1.2rem;
+    }
+    
+    .explanation-text {
+        font-size: 1rem;
+    }
+    
+    .tips-section {
+        padding: 16px;
+    }
+    
+    .tip-content {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .tip-icon {
+        align-self: flex-start;
+    }
+}
+
+/* Animation for badge transitions */
+.result-badge {
+    animation: fadeInScale 0.5s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Subtle pulse animation for safe results */
+.result-badge.safe {
+    animation: fadeInScale 0.5s ease-out, safePulse 2s ease-in-out infinite;
+}
+
+@keyframes safePulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(39, 174, 96, 0.1);
+    }
+}

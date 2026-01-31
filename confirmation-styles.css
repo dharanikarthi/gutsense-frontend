@@ -1,0 +1,410 @@
+/* Confirmation Page Specific Styles */
+.confirmation-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 600px;
+    animation: slideUp 0.6s ease-out;
+    text-align: center;
+}
+
+/* AI Success Badge */
+.ai-success-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+.ai-success-badge .ai-icon {
+    font-size: 1rem;
+}
+
+/* Detected Food Card */
+.detected-food-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
+    border: 3px solid #27ae60;
+    border-radius: 24px;
+    padding: 32px;
+    margin: 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(39, 174, 96, 0.15);
+    transition: all 0.3s ease;
+}
+
+.detected-food-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 50px rgba(39, 174, 96, 0.2);
+}
+
+.food-image-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+    background-color: #ecf0f1;
+    flex-shrink: 0;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border: 2px solid white;
+}
+
+.food-details {
+    flex: 1;
+    text-align: left;
+}
+
+.detected-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.detection-confidence {
+    font-size: 1rem;
+    color: #27ae60;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.detection-note {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    margin: 0;
+    line-height: 1.4;
+}
+
+.accuracy-badge {
+    position: absolute;
+    top: 16px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    background: #27ae60;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+}
+
+/* Confirmation Actions */
+.confirmation-actions {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.confirm-button {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    padding: 18px 32px;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.confirm-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+}
+
+.edit-button {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 2px solid #bdc3c7;
+    padding: 16px 32px;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.edit-button:hover {
+    background: #d5dbdb;
+    border-color: #95a5a6;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Edit Mode */
+.edit-mode {
+    background: #f8f9fa;
+    border: 2px solid #ecf0f1;
+    border-radius: 20px;
+    padding: 24px;
+    margin: 24px 0;
+    animation: slideUp 0.4s ease-out;
+}
+
+.edit-input-section {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.edit-input-section label {
+    display: block;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.food-name-edit {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px solid #ecf0f1;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    color: #2c3e50;
+    background: white;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.food-name-edit:focus {
+    border-color: #27ae60;
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+}
+
+.edit-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.save-edit-button {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+    flex: 1;
+}
+
+.save-edit-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.cancel-edit-button {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 2px solid #bdc3c7;
+    padding: 12px 24px;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.cancel-edit-button:hover {
+    background: #d5dbdb;
+    border-color: #95a5a6;
+}
+
+/* Accuracy Help */
+.accuracy-help {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border: 2px solid #f0d43a;
+    border-radius: 16px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.95rem;
+    color: #856404;
+}
+
+.help-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.accuracy-help p {
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Final Analysis Loading */
+.final-analysis-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 48px 32px;
+    text-align: center;
+}
+
+.analysis-brain {
+    position: relative;
+    font-size: 4rem;
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 16px;
+}
+
+.brain-pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80px;
+    height: 80px;
+    border: 2px solid rgba(39, 174, 96, 0.3);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1.5);
+        opacity: 0;
+    }
+}
+
+.final-analysis-loading h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+.final-analysis-loading p {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+    margin: 0;
+    max-width: 400px;
+}
+
+/* Analysis Steps */
+.analysis-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 24px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.analysis-steps .step {
+    padding: 12px 20px;
+    background: #f8f9fa;
+    border: 2px solid #ecf0f1;
+    border-radius: 12px;
+    font-size: 1rem;
+    color: #7f8c8d;
+    opacity: 0.5;
+    transition: all 0.5s ease;
+}
+
+.analysis-steps .step.active {
+    opacity: 1;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    border-color: #f0d43a;
+    color: #856404;
+    transform: scale(1.02);
+}
+
+.analysis-steps .step.completed {
+    opacity: 0.8;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-color: #27ae60;
+    color: #155724;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .detected-food-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+    
+    .food-details {
+        text-align: center;
+    }
+    
+    .confirmation-actions {
+        flex-direction: column;
+    }
+    
+    .confirm-button,
+    .edit-button {
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .confirmation-card {
+        padding: 32px 24px;
+    }
+    
+    .detected-food-card {
+        padding: 20px;
+    }
+    
+    .food-image-preview {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .detected-name {
+        font-size: 1.5rem;
+    }
+    
+    .final-analysis-loading {
+        padding: 36px 24px;
+    }
+    
+    .analysis-brain {
+        font-size: 3rem;
+    }
+}

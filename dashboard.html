@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - GutSense</title>
+    <link rel="stylesheet" href="enhanced-styles.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-content">
+            <!-- Header -->
+            <div class="dashboard-header">
+                <div class="greeting-section">
+                    <h1 class="greeting-text">What did you eat today?</h1>
+                    <p class="date-text" id="currentDate"></p>
+                </div>
+                <button class="profile-button" onclick="goToProfile()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- AI Info Card -->
+            <div class="ai-info-card">
+                <div class="ai-icon">🤖</div>
+                <div class="ai-content">
+                    <p>GutSense uses AI to understand food and its digestive impact.</p>
+                </div>
+            </div>
+
+            <!-- Main Action Cards -->
+            <div class="main-actions">
+                <div class="main-action-card photo-card" onclick="uploadPhoto()">
+                    <div class="card-icon">📸</div>
+                    <div class="card-content">
+                        <h2>Upload food photo</h2>
+                        <p>Let AI analyze your meal</p>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+
+                <div class="main-action-card manual-card" onclick="enterManually()">
+                    <div class="card-icon">✍️</div>
+                    <div class="card-content">
+                        <h2>Enter food manually</h2>
+                        <p>Search or type food name</p>
+                    </div>
+                    <div class="card-glow"></div>
+                </div>
+            </div>
+
+            <!-- Secondary Actions -->
+            <div class="secondary-actions">
+                <div class="secondary-action" onclick="viewHistory()">
+                    <div class="action-icon">📊</div>
+                    <span>Food history</span>
+                </div>
+                
+                <div class="secondary-action" onclick="viewProfile()">
+                    <div class="action-icon">⚙️</div>
+                    <span>Gut profile</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set current date
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        function uploadPhoto() {
+            window.location.href = 'food-check.html?mode=photo';
+        }
+
+        function enterManually() {
+            window.location.href = 'manual-entry.html';
+        }
+
+        function viewProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        function viewHistory() {
+            window.location.href = 'food-history.html';
+        }
+
+        function goToProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        // Add subtle animations
+        document.addEventListener('DOMContentLoaded', () => {
+            const cards = document.querySelectorAll('.action-card, .insight-card, .recent-item');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+                card.classList.add('fade-in');
+            });
+        });
+    </script>
+</body>
+</html>

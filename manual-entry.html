@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual Entry - GutSense</title>
+    <link rel="stylesheet" href="enhanced-styles.css">
+    <link rel="stylesheet" href="manual-entry-redesigned.css">
+</head>
+<body>
+    <div class="manual-entry-container">
+        <!-- Progress Header -->
+        <div class="progress-header">
+            <button class="back-button" onclick="goBack()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5"/>
+                    <path d="M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span>Choose food</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span>Confirm details</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span>Analyze gut impact</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Step 1: Food Selection -->
+            <div class="step-content active" id="step1">
+                <div class="step-header">
+                    <h1>What did you eat?</h1>
+                    <p>Search for your food or browse by category</p>
+                </div>
+
+                <!-- Smart Search Bar -->
+                <div class="search-section">
+                    <div class="search-container">
+                        <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input 
+                            type="text" 
+                            id="foodSearch" 
+                            class="search-input" 
+                            placeholder="Search food (e.g., dosa, pizza, fried chicken)"
+                            oninput="handleSearch(this.value)"
+                            onfocus="showSearchSuggestions()"
+                        >
+                        <button class="clear-search" onclick="clearSearch()" style="display: none;">×</button>
+                    </div>
+                    
+                    <!-- Search Suggestions -->
+                    <div class="search-suggestions" id="searchSuggestions" style="display: none;">
+                        <div class="suggestions-header">
+                            <span>Recent searches</span>
+                        </div>
+                        <div class="suggestion-item" onclick="selectFood('Chicken Biryani', 'indian')">
+                            <div class="suggestion-icon">🍛</div>
+                            <div class="suggestion-content">
+                                <span class="suggestion-name">Chicken Biryani</span>
+                                <span class="suggestion-category">Indian</span>
+                            </div>
+                        </div>
+                        <div class="suggestion-item" onclick="selectFood('Margherita Pizza', 'italian')">
+                            <div class="suggestion-icon">🍕</div>
+                            <div class="suggestion-content">
+                                <span class="suggestion-name">Margherita Pizza</span>
+                                <span class="suggestion-category">Italian</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Live Search Results -->
+                    <div class="live-results" id="liveResults" style="display: none;">
+                        <!-- Dynamic search results will appear here -->
+                    </div>
+                </div>
+
+                <!-- OR Divider -->
+                <div class="divider">
+                    <span>or browse categories</span>
+                </div>
+
+                <!-- Food Categories -->
+                <div class="categories-section">
+                    <div class="categories-grid">
+                        <div class="category-card" data-category="indian" onclick="selectCategory('indian')">
+                            <div class="category-icon">🍛</div>
+                            <div class="category-content">
+                                <h3>Indian</h3>
+                                <p>Curry, biryani, dosa</p>
+                            </div>
+                            <div class="category-arrow">→</div>
+                        </div>
+                        
+                        <div class="category-card" data-category="italian" onclick="selectCategory('italian')">
+                            <div class="category-icon">🍝</div>
+                            <div class="category-content">
+                                <h3>Italian</h3>
+                                <p>Pasta, pizza, risotto</p>
+                            </div>
+                            <div class="category-arrow">→</div>
+                        </div>
+                        
+                        <div class="category-card" data-category="chinese" onclick="selectCategory('chinese')">
+                            <div class="category-icon">🥢</div>
+                            <div class="category-content">
+                                <h3>Chinese</h3>
+                                <p>Noodles, fried rice, dim sum</p>
+                            </div>
+                            <div class="category-arrow">→</div>
+                        </div>
+                        
+                        <div class="category-card" data-category="mexican" onclick="selectCategory('mexican')">
+                            <div class="category-icon">🌮</div>
+                            <div class="category-content">
+                                <h3>Mexican</h3>
+                                <p>Tacos, burritos, quesadilla</p>
+                            </div>
+                            <div class="category-arrow">→</div>
+                        </div>
+                        
+                        <div class="category-card" data-category="american" onclick="selectCategory('american')">
+                            <div class="category-icon">🍔</div>
+                            <div class="category-content">
+                                <h3>American</h3>
+                                <p>Burgers, fries, sandwiches</p>
+                            </div>
+                            <div class="category-arrow">→</div>
+                        </div>
+                        
+                        <div class="category-card" data-category="healthy" onclick="selectCategory('healthy')">
+                            <div class="category-icon">🥗</div>
+                            <div class="category-content">
+                                <h3>Healthy</h3>
+                                <p>Salads, smoothies, quinoa</p>
+                            </div>
+                            <div class="category-arrow">→</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Foods (Hidden initially) -->
+                <div class="category-foods" id="categoryFoods" style="display: none;">
+                    <div class="category-foods-header">
+                        <button class="back-to-categories" onclick="backToCategories()">← Back to categories</button>
+                        <h3 id="categoryTitle">Indian Foods</h3>
+                    </div>
+                    <div class="foods-grid" id="foodsGrid">
+                        <!-- Dynamic food items will appear here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Food Confirmation -->
+            <div class="step-content" id="step2">
+                <div class="step-header">
+                    <h1>Confirm your food details</h1>
+                    <p>Help us understand exactly what you ate</p>
+                </div>
+
+                <!-- Selected Food Card -->
+                <div class="selected-food-card" id="selectedFoodCard">
+                    <div class="food-info">
+                        <div class="food-icon" id="selectedFoodIcon">🍕</div>
+                        <div class="food-details">
+                            <h2 id="selectedFoodName">Margherita Pizza</h2>
+                            <p id="selectedFoodCategory">Italian cuisine</p>
+                        </div>
+                    </div>
+                    <button class="edit-food-btn" onclick="editFood()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        Edit
+                    </button>
+                </div>
+
+                <!-- Portion Size -->
+                <div class="detail-section">
+                    <h3>Portion size</h3>
+                    <div class="portion-options">
+                        <label class="portion-option">
+                            <input type="radio" name="portion" value="small">
+                            <div class="portion-card">
+                                <div class="portion-icon">🥄</div>
+                                <span>Small</span>
+                            </div>
+                        </label>
+                        <label class="portion-option">
+                            <input type="radio" name="portion" value="medium" checked>
+                            <div class="portion-card">
+                                <div class="portion-icon">🍽️</div>
+                                <span>Medium</span>
+                            </div>
+                        </label>
+                        <label class="portion-option">
+                            <input type="radio" name="portion" value="large">
+                            <div class="portion-card">
+                                <div class="portion-icon">🍲</div>
+                                <span>Large</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Cooking Style -->
+                <div class="detail-section">
+                    <h3>Cooking style (optional)</h3>
+                    <div class="cooking-options">
+                        <button class="cooking-chip" data-style="fried">🍳 Fried</button>
+                        <button class="cooking-chip" data-style="baked">🔥 Baked</button>
+                        <button class="cooking-chip" data-style="boiled">💧 Boiled</button>
+                        <button class="cooking-chip" data-style="grilled">🔥 Grilled</button>
+                        <button class="cooking-chip" data-style="steamed">💨 Steamed</button>
+                    </div>
+                </div>
+
+                <!-- Symptom Input -->
+                <div class="symptom-section">
+                    <div class="symptom-toggle" onclick="toggleSymptoms()">
+                        <h3>Feeling anything after eating?</h3>
+                        <div class="toggle-icon" id="symptomToggle">+</div>
+                    </div>
+                    <div class="symptom-options" id="symptomOptions" style="display: none;">
+                        <p class="symptom-helper">This helps us provide better gut analysis</p>
+                        <div class="symptom-grid">
+                            <label class="symptom-item">
+                                <input type="checkbox" name="symptoms" value="bloating">
+                                <div class="symptom-card">
+                                    <div class="symptom-icon">🎈</div>
+                                    <span>Bloating</span>
+                                </div>
+                            </label>
+                            <label class="symptom-item">
+                                <input type="checkbox" name="symptoms" value="acidity">
+                                <div class="symptom-card">
+                                    <div class="symptom-icon">🔥</div>
+                                    <span>Acidity</span>
+                                </div>
+                            </label>
+                            <label class="symptom-item">
+                                <input type="checkbox" name="symptoms" value="fatigue">
+                                <div class="symptom-card">
+                                    <div class="symptom-icon">😴</div>
+                                    <span>Fatigue</span>
+                                </div>
+                            </label>
+                            <label class="symptom-item">
+                                <input type="checkbox" name="symptoms" value="gas">
+                                <div class="symptom-card">
+                                    <div class="symptom-icon">💨</div>
+                                    <span>Gas</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Analysis Loading -->
+            <div class="step-content" id="step3">
+                <div class="analysis-loading">
+                    <div class="loading-animation">
+                        <div class="gut-icon">🦠</div>
+                        <div class="loading-waves">
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                            <div class="wave"></div>
+                        </div>
+                    </div>
+                    <h2>Analyzing how your gut reacts...</h2>
+                    <p>Our AI is processing your food against your gut profile</p>
+                    <div class="loading-steps">
+                        <div class="loading-step active">🔍 Identifying food properties</div>
+                        <div class="loading-step">🧬 Checking gut compatibility</div>
+                        <div class="loading-step">💡 Generating recommendations</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <button class="nav-button secondary" id="backBtn" onclick="previousStep()" style="display: none;">
+                ← Back
+            </button>
+            <button class="nav-button primary" id="nextBtn" onclick="nextStep()" disabled>
+                Continue →
+            </button>
+            <button class="analyze-button" id="analyzeBtn" onclick="analyzeFood()" style="display: none;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"/>
+                </svg>
+                🧬 Analyze Gut Impact
+            </button>
+        </div>
+    </div>
+
+    <script src="manual-entry-redesigned.js"></script>
+</body>
+</html>

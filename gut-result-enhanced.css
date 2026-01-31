@@ -1,0 +1,383 @@
+/* Gut Result Specific Styles */
+.result-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px 32px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    width: 100%;
+    max-width: 600px;
+    animation: slideUp 0.6s ease-out;
+    text-align: center;
+}
+
+/* Large Result Badge */
+.result-badge-large {
+    background: white;
+    border-radius: 24px;
+    padding: 32px;
+    margin-bottom: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    border: 3px solid;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.result-badge-large::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s ease;
+}
+
+.result-badge-large:hover::before {
+    left: 100%;
+}
+
+.result-badge-large.safe {
+    border-color: #27ae60;
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    color: #155724;
+}
+
+.result-badge-large.caution {
+    border-color: #f39c12;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+    color: #856404;
+}
+
+.result-badge-large.avoid {
+    border-color: #e74c3c;
+    background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+    color: #721c24;
+}
+
+.badge-icon-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.badge-content {
+    text-align: center;
+}
+
+.badge-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.badge-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Confidence Meter */
+.confidence-section {
+    background: #f8f9fa;
+    border-radius: 20px;
+    padding: 24px;
+    margin-bottom: 32px;
+    border: 2px solid #ecf0f1;
+}
+
+.confidence-meter {
+    margin-top: 16px;
+}
+
+.meter-track {
+    width: 100%;
+    height: 12px;
+    background: #ecf0f1;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    position: relative;
+}
+
+.meter-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #e74c3c 0%, #f39c12 50%, #27ae60 100%);
+    border-radius: 6px;
+    transition: width 1s ease-out;
+    position: relative;
+}
+
+.meter-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.meter-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.meter-score {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Food Detection */
+.food-detection {
+    text-align: left;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ecf0f1 100%);
+    border-radius: 20px;
+    border-left: 6px solid #27ae60;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.detection-label {
+    font-size: 1rem;
+    color: #7f8c8d;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detected-food {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Explanation Section */
+.explanation-section {
+    text-align: left;
+    margin-bottom: 32px;
+    padding: 24px;
+    background: white;
+    border-radius: 20px;
+    border: 2px solid #ecf0f1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.explanation-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #34495e;
+    margin: 0;
+}
+
+/* Tip Cards */
+.tips-section {
+    text-align: left;
+    margin-bottom: 40px;
+}
+
+.tip-cards {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.tip-card {
+    background: linear-gradient(135deg, #f0f8f0 0%, #e8f5e8 100%);
+    border: 2px solid #d4edda;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.tip-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.15);
+    border-color: #27ae60;
+}
+
+.tip-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.tip-card:hover::before {
+    left: 100%;
+}
+
+.tip-icon {
+    font-size: 2rem;
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    background: rgba(39, 174, 96, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tip-content h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #27ae60;
+    margin-bottom: 8px;
+}
+
+.tip-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.primary-action-button {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    border: none;
+    padding: 18px 32px;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+    flex: 1;
+    min-width: 200px;
+}
+
+.primary-action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(39, 174, 96, 0.4);
+}
+
+.secondary-action-button {
+    background: #ecf0f1;
+    color: #2c3e50;
+    border: 2px solid #bdc3c7;
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 160px;
+    justify-content: center;
+}
+
+.secondary-action-button:hover {
+    background: #d5dbdb;
+    border-color: #95a5a6;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Pulse Animation for Safe Results */
+.result-badge-large.safe {
+    animation: slideUp 0.6s ease-out, safePulse 3s ease-in-out infinite;
+}
+
+@keyframes safePulse {
+    0%, 100% {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 0 0 0 rgba(39, 174, 96, 0.3);
+    }
+    50% {
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1), 0 0 0 12px rgba(39, 174, 96, 0.1);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .primary-action-button,
+    .secondary-action-button {
+        min-width: auto;
+    }
+    
+    .tip-cards {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .result-card {
+        padding: 32px 24px;
+    }
+    
+    .result-badge-large {
+        padding: 24px;
+    }
+    
+    .badge-icon-large {
+        width: 64px;
+        height: 64px;
+    }
+    
+    .badge-title {
+        font-size: 1.6rem;
+    }
+    
+    .detected-food {
+        font-size: 1.4rem;
+    }
+    
+    .tip-card {
+        padding: 16px;
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .tip-icon {
+        align-self: center;
+    }
+}

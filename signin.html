@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - GutSense</title>
+    <link rel="stylesheet" href="auth-styles.css">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="logo-section">
+                <div class="app-logo">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                        <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                </div>
+                <h1 class="app-name">GutSense</h1>
+                <p class="app-tagline">AI-powered gut health companion</p>
+            </div>
+
+            <form class="auth-form">
+                <div class="input-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+
+                <button type="button" class="primary-button" onclick="signIn()">Sign In</button>
+                
+                <button type="button" class="secondary-button" onclick="continueAsGuest()">Continue as Guest</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="signup.html" class="link">Sign Up</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function signIn() {
+            window.location.href = 'dashboard.html';
+        }
+
+        function continueAsGuest() {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
