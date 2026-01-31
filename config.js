@@ -3,7 +3,7 @@ const CONFIG = {
     // API Configuration
     API_BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8000'  // Local development
-        : 'https://your-backend.vercel.app',  // Production - UPDATE THIS with your actual backend URL
+        : 'https://gutsense-backend.vercel.app',  // Production - Deployed backend URL
     
     // API Endpoints
     ENDPOINTS: {
