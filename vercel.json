@@ -1,23 +1,10 @@
 {
-  "version": 2,
-  "outputDirectory": ".",
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        },
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        }
-      ]
+  "functions": {
+    "api/analyze-food-openai.js": {
+      "maxDuration": 30
     }
-  ]
+  },
+  "env": {
+    "OPENAI_API_KEY": "@openai-api-key"
+  }
 }

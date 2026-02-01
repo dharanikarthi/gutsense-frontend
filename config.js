@@ -1,7 +1,7 @@
 // Configuration for GutSense Frontend
 const CONFIG = {
-    // OpenAI Configuration - API key should be set via environment or user input
-    OPENAI_API_KEY: '', // Set this via environment variable or user input
+    // OpenAI Configuration - Using Vercel serverless function for security
+    OPENAI_API_ENDPOINT: '/api/analyze-food-openai',
     OPENAI_API_URL: 'https://api.openai.com/v1/chat/completions',
     
     // API Configuration (Legacy - keeping for other features)

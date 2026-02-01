@@ -8,8 +8,8 @@
     <!-- App Configuration -->
     <script src="config.js"></script>
     
-    <!-- OpenAI Food Analyzer -->
-    <script src="js/openai-food-analyzer.js"></script>
+    <!-- Vercel Food Analyzer (Serverless OpenAI) -->
+    <script src="js/vercel-food-analyzer.js"></script>
     <style>
         * {
             margin: 0;
@@ -341,26 +341,12 @@
     <div class="container">
         <div class="header">
             <h1>🍽️ Food Image Analyzer</h1>
-            <p>Upload a photo of your food and get instant AI-powered gut health analysis using OpenAI Vision!</p>
+            <p>Upload a photo of your food and get instant AI-powered gut health analysis using secure OpenAI integration!</p>
         </div>
 
         <div class="main-content">
             <div class="upload-section">
                 <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
-                
-                <!-- API Key Section -->
-                <div id="apiKeySection" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 10px; padding: 20px; margin-bottom: 20px; display: none;">
-                    <h4 style="color: #856404; margin-bottom: 15px;">🔑 OpenAI API Key Required</h4>
-                    <p style="color: #856404; margin-bottom: 15px;">To analyze food images, please enter your OpenAI API key:</p>
-                    <div style="display: flex; gap: 10px; align-items: center;">
-                        <input type="password" id="apiKeyInput" placeholder="sk-proj-..." style="flex: 1; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
-                        <button id="saveApiKeyBtn" style="background: #4facfe; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">Save</button>
-                    </div>
-                    <p style="font-size: 0.9rem; color: #856404; margin-top: 10px;">
-                        Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #4facfe;">OpenAI Platform</a>. 
-                        Your key is stored locally and never shared.
-                    </p>
-                </div>
                 
                 <div class="upload-area" onclick="document.getElementById('imageInput').click()">
                     <div class="upload-icon">📸</div>
@@ -416,29 +402,8 @@
         const results = document.getElementById('results');
         const placeholder = document.getElementById('placeholder');
         const uploadArea = document.querySelector('.upload-area');
-        const apiKeySection = document.getElementById('apiKeySection');
-        const apiKeyInput = document.getElementById('apiKeyInput');
-        const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
 
         let selectedImage = null;
-
-        // Handle API key saving
-        saveApiKeyBtn.addEventListener('click', () => {
-            const apiKey = apiKeyInput.value.trim();
-            if (apiKey) {
-                window.openAIFoodAnalyzer.setApiKey(apiKey);
-                apiKeySection.style.display = 'none';
-                apiKeyInput.value = '';
-                console.log('✅ API key saved successfully');
-            }
-        });
-
-        // Handle Enter key in API key input
-        apiKeyInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                saveApiKeyBtn.click();
-            }
-        });
 
         // Handle file input change
         imageInput.addEventListener('change', handleImageSelect);
@@ -485,35 +450,22 @@
         async function analyzeFood() {
             if (!selectedImage) return;
 
-            // Check if API key is available
-            if (!window.openAIFoodAnalyzer.hasApiKey()) {
-                apiKeySection.style.display = 'block';
-                return;
-            }
-
             // Show loading
             loading.style.display = 'block';
             analyzeBtn.disabled = true;
             results.style.display = 'none';
 
             try {
-                console.log('🖼️ Starting OpenAI food analysis...');
+                console.log('🖼️ Starting Vercel OpenAI food analysis...');
                 
-                // Use OpenAI Vision API for analysis
-                const data = await window.openAIFoodAnalyzer.analyzeFood(selectedImage);
+                // Use Vercel serverless function for analysis
+                const data = await window.vercelFoodAnalyzer.analyzeFood(selectedImage);
                 
                 displayResults(data);
 
             } catch (error) {
                 console.error('Analysis failed:', error);
-                
-                // If it's an API key error, show the API key section
-                if (error.message.includes('API key')) {
-                    apiKeySection.style.display = 'block';
-                    displayError('Please enter your OpenAI API key to continue.');
-                } else {
-                    displayError('Analysis failed. Please check your internet connection and try again.');
-                }
+                displayError('Analysis failed. Please check your internet connection and try again.');
             } finally {
                 loading.style.display = 'none';
                 analyzeBtn.disabled = false;
@@ -639,31 +591,24 @@
 
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 Initializing GutSense Food Analyzer with OpenAI...');
+            console.log('🚀 Initializing GutSense Food Analyzer with Vercel OpenAI...');
             
-            // Check if API key is available
-            if (window.openAIFoodAnalyzer.hasApiKey()) {
-                // Test OpenAI connection
-                try {
-                    console.log('🤖 Testing OpenAI connection...');
-                    const isConnected = await window.openAIFoodAnalyzer.testConnection();
-                    
-                    if (isConnected) {
-                        console.log('✅ OpenAI Vision API ready!');
-                        const header = document.querySelector('.header p');
-                        header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🤖 OpenAI Ready</span>';
-                    } else {
-                        throw new Error('OpenAI connection failed');
-                    }
-                } catch (error) {
-                    console.error('⚠️ OpenAI connection failed:', error);
+            // Test Vercel function connection
+            try {
+                console.log('🤖 Testing Vercel OpenAI function...');
+                const isConnected = await window.vercelFoodAnalyzer.testConnection();
+                
+                if (isConnected) {
+                    console.log('✅ Vercel OpenAI function ready!');
                     const header = document.querySelector('.header p');
-                    header.innerHTML += ' <span style="background: rgba(255,0,0,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">⚠️ API Issue</span>';
+                    header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🚀 Vercel Ready</span>';
+                } else {
+                    throw new Error('Vercel function connection failed');
                 }
-            } else {
-                console.log('🔑 API key not found - user will be prompted when needed');
+            } catch (error) {
+                console.error('⚠️ Vercel function connection failed:', error);
                 const header = document.querySelector('.header p');
-                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🔑 API Key Needed</span>';
+                header.innerHTML += ' <span style="background: rgba(255,0,0,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">⚠️ Function Issue</span>';
             }
         });
     </script>
