@@ -22,7 +22,7 @@ class SmartFoodDetector {
                     { r: [200, 255], g: [160, 220], b: [80, 140], weight: 2 }   // Mixed spices
                 ],
                 keywords: ["rice", "grain", "mixed", "colorful"],
-                baseConfidence: 0.75
+                baseConfidence: 0.85
             },
             "butter chicken": {
                 name: "Butter Chicken",
@@ -32,7 +32,7 @@ class SmartFoodDetector {
                     { r: [220, 255], g: [160, 220], b: [120, 180], weight: 2 }  // Creamy sauce
                 ],
                 keywords: ["sauce", "curry", "orange", "creamy"],
-                baseConfidence: 0.80
+                baseConfidence: 0.88
             },
             "dosa": {
                 name: "Dosa",
@@ -42,7 +42,7 @@ class SmartFoodDetector {
                     { r: [160, 200], g: [140, 180], b: [80, 120], weight: 2 }    // Darker edges
                 ],
                 keywords: ["flat", "round", "crispy", "golden"],
-                baseConfidence: 0.85
+                baseConfidence: 0.92
             },
             "idli": {
                 name: "Idli",
@@ -62,7 +62,7 @@ class SmartFoodDetector {
                     { r: [160, 220], g: [100, 180], b: [60, 140], weight: 2 }    // Spiced surface
                 ],
                 keywords: ["cubes", "grilled", "white", "chunks"],
-                baseConfidence: 0.78
+                baseConfidence: 0.85
             },
             "samosa": {
                 name: "Samosa",
@@ -72,7 +72,7 @@ class SmartFoodDetector {
                     { r: [140, 180], g: [100, 140], b: [40, 80], weight: 2 }     // Dark crispy
                 ],
                 keywords: ["triangular", "fried", "golden", "crispy"],
-                baseConfidence: 0.82
+                baseConfidence: 0.88
             }
         };
 
@@ -166,7 +166,7 @@ class SmartFoodDetector {
             let bestMatch = matches[0];
             
             // If confidence is too low, use generic analysis
-            if (bestMatch.confidence < 0.3) {
+            if (bestMatch.confidence < 0.15) {
                 console.log('⚠️ Low confidence, using generic analysis');
                 return this.getGenericAnalysis();
             }
@@ -276,16 +276,21 @@ class SmartFoodDetector {
             for (const signature of pattern.colorSignatures) {
                 let colorMatch = 0;
                 
-                // Check against dominant colors
+                // Check against dominant colors (more generous scoring)
                 for (const domColor of colorStats.dominantColors) {
                     if (this.isColorInRange(domColor, signature)) {
-                        colorMatch += domColor.percentage * (signature.weight || 1);
+                        colorMatch += (domColor.percentage * 1.5) * (signature.weight || 1);
                     }
                 }
                 
-                // Check against average color
+                // Check against average color (bonus for overall tone match)
                 if (this.isColorInRange(colorStats, signature)) {
-                    colorMatch += 20 * (signature.weight || 1);
+                    colorMatch += 30 * (signature.weight || 1);
+                }
+                
+                // Partial color matching (within 50% of range)
+                if (this.isColorNearRange(colorStats, signature)) {
+                    colorMatch += 15 * (signature.weight || 1);
                 }
                 
                 maxColorMatch = Math.max(maxColorMatch, colorMatch);
@@ -294,28 +299,36 @@ class SmartFoodDetector {
             // Brightness-based adjustments
             let brightnessBonus = 0;
             if (foodKey === 'idli' && colorStats.brightness > 200) {
-                brightnessBonus = 30; // Idli is very white
+                brightnessBonus = 40; // Idli is very white
             } else if (foodKey === 'dosa' && colorStats.brightness > 150 && colorStats.brightness < 220) {
-                brightnessBonus = 25; // Dosa is golden
+                brightnessBonus = 35; // Dosa is golden
             } else if (foodKey === 'butter chicken' && colorStats.brightness > 120 && colorStats.brightness < 180) {
-                brightnessBonus = 20; // Butter chicken is medium bright
+                brightnessBonus = 30; // Butter chicken is medium bright
             } else if (foodKey === 'samosa' && colorStats.brightness > 100 && colorStats.brightness < 170) {
-                brightnessBonus = 20; // Samosa is golden brown
+                brightnessBonus = 30; // Samosa is golden brown
+            } else if (foodKey === 'biryani' && colorStats.brightness > 130 && colorStats.brightness < 200) {
+                brightnessBonus = 25; // Biryani is colorful
+            } else if (foodKey === 'paneer tikka' && colorStats.brightness > 140 && colorStats.brightness < 190) {
+                brightnessBonus = 25; // Paneer tikka is mixed colors
             }
             
             // Texture bonus
             let textureBonus = 0;
             if (foodKey === 'idli' && textureStats.variance < 0.3) {
-                textureBonus = 15; // Idli is smooth
+                textureBonus = 20; // Idli is smooth
             } else if (foodKey === 'dosa' && textureStats.variance > 0.2 && textureStats.variance < 0.6) {
-                textureBonus = 10; // Dosa has medium texture
+                textureBonus = 15; // Dosa has medium texture
+            } else if (foodKey === 'samosa' && textureStats.variance > 0.3) {
+                textureBonus = 15; // Samosa is crispy/rough
+            } else if (foodKey === 'butter chicken' && textureStats.variance < 0.4) {
+                textureBonus = 10; // Butter chicken is saucy/smooth
             }
             
-            // Calculate final score
-            totalScore = maxColorMatch + brightnessBonus + textureBonus;
+            // Calculate final score with better scaling
+            totalScore = (maxColorMatch * 2) + brightnessBonus + textureBonus;
             
-            // Apply base confidence
-            const confidence = Math.min((totalScore / 100) * pattern.baseConfidence, 0.95);
+            // Apply base confidence with better scaling
+            const confidence = Math.min((totalScore / 150) * pattern.baseConfidence, 0.95);
             
             matches.push({
                 food: foodKey,
@@ -340,6 +353,21 @@ class SmartFoodDetector {
         return color.r >= signature.r[0] && color.r <= signature.r[1] &&
                color.g >= signature.g[0] && color.g <= signature.g[1] &&
                color.b >= signature.b[0] && color.b <= signature.b[1];
+    }
+    
+    isColorNearRange(color, signature) {
+        // Check if color is within 50% extended range
+        const rRange = signature.r[1] - signature.r[0];
+        const gRange = signature.g[1] - signature.g[0];
+        const bRange = signature.b[1] - signature.b[0];
+        
+        const rExtended = [signature.r[0] - rRange * 0.5, signature.r[1] + rRange * 0.5];
+        const gExtended = [signature.g[0] - gRange * 0.5, signature.g[1] + gRange * 0.5];
+        const bExtended = [signature.b[0] - bRange * 0.5, signature.b[1] + bRange * 0.5];
+        
+        return color.r >= rExtended[0] && color.r <= rExtended[1] &&
+               color.g >= gExtended[0] && color.g <= gExtended[1] &&
+               color.b >= bExtended[0] && color.b <= bExtended[1];
     }
 
     generateAnalysis(match) {
