@@ -1,0 +1,88 @@
+[1mdiff --git a/test-integration.html b/test-integration.html[m
+[1mnew file mode 100644[m
+[1mindex 0000000..26b2dd2[m
+[1m--- /dev/null[m
+[1m+++ b/test-integration.html[m
+[36m@@ -0,0 +1,81 @@[m
+[32m+[m[32m<!DOCTYPE html>[m
+[32m+[m[32m<html lang="en">[m
+[32m+[m[32m<head>[m
+[32m+[m[32m    <meta charset="UTF-8">[m
+[32m+[m[32m    <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
+[32m+[m[32m    <title>API Integration Test - GutSense</title>[m
+[32m+[m[32m    <script src="config.js"></script>[m
+[32m+[m[32m    <style>[m
+[32m+[m[32m        body { font-family: Arial, sans-serif; padding: 20px; }[m
+[32m+[m[32m        .test-result { margin: 10px 0; padding: 10px; border-radius: 5px; }[m
+[32m+[m[32m        .success { background-color: #d4edda; color: #155724; }[m
+[32m+[m[32m        .error { background-color: #f8d7da; color: #721c24; }[m
+[32m+[m[32m        .info { background-color: #d1ecf1; color: #0c5460; }[m
+[32m+[m[32m    </style>[m
+[32m+[m[32m</head>[m
+[32m+[m[32m<body>[m
+[32m+[m[32m    <h1>🧪 GutSense API Integration Test</h1>[m
+[32m+[m[32m    <p>This page tests the connection between the deployed frontend and backend.</p>[m
+[32m+[m[41m    [m
+[32m+[m[32m    <div id="results"></div>[m
+[32m+[m[41m    [m
+[32m+[m[32m    <button onclick="runTests()">🔄 Run Tests Again</button>[m
+[32m+[m
+[32m+[m[32m    <script>[m
+[32m+[m[32m        async function runTests() {[m
+[32m+[m[32m            const resultsDiv = document.getElementById('results');[m
+[32m+[m[32m            resultsDiv.innerHTML = '<div class="info">🔍 Running API integration tests...</div>';[m
+[32m+[m[41m            [m
+[32m+[m[32m            // Test 1: Basic connectivity[m
+[32m+[m[32m            try {[m
+[32m+[m[32m                console.log('Testing API Base URL:', CONFIG.API_BASE_URL);[m
+[32m+[m[41m                [m
+[32m+[m[32m                const response = await fetch(CONFIG.API_BASE_URL + '/api/health');[m
+[32m+[m[32m                const data = await response.json();[m
+[32m+[m[41m                [m
+[32m+[m[32m                resultsDiv.innerHTML += `[m
+[32m+[m[32m                    <div class="success">[m
+[32m+[m[32m                        ✅ <strong>Health Check Success!</strong><br>[m
+[32m+[m[32m                        Status: ${data.status}<br>[m
+[32m+[m[32m                        Version: ${data.version}<br>[m
+[32m+[m[32m                        Database: ${data.database}[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                `;[m
+[32m+[m[41m                [m
+[32m+[m[32m                // Test 2: Root endpoint[m
+[32m+[m[32m                const rootResponse = await fetch(CONFIG.API_BASE_URL + '/');[m
+[32m+[m[32m                const rootData = await rootResponse.json();[m
+[32m+[m[41m                [m
+[32m+[m[32m                resultsDiv.innerHTML += `[m
+[32m+[m[32m                    <div class="success">[m
+[32m+[m[32m                        ✅ <strong>Root Endpoint Success!</strong><br>[m
+[32m+[m[32m                        Message: ${rootData.message}<br>[m
+[32m+[m[32m                        Status: ${rootData.status}[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                `;[m
+[32m+[m[41m                [m
+[32m+[m[32m                resultsDiv.innerHTML += `[m
+[32m+[m[32m                    <div class="success">[m
+[32m+[m[32m                        🎉 <strong>All Tests Passed!</strong><br>[m
+[32m+[m[32m                        Frontend can successfully communicate with backend.<br>[m
+[32m+[m[32m                        CORS is properly configured.[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                `;[m
+[32m+[m[41m                [m
+[32m+[m[32m            } catch (error) {[m
+[32m+[m[32m                console.error('API Test Failed:', error);[m
+[32m+[m[32m                resultsDiv.innerHTML += `[m
+[32m+[m[32m                    <div class="error">[m
+[32m+[m[32m                        ❌ <strong>API Test Failed!</strong><br>[m
+[32m+[m[32m                        Error: ${error.message}<br>[m
+[32m+[m[32m                        Check browser console for details.[m
+[32m+[m[32m                    </div>[m
+[32m+[m[32m                `;[m
+[32m+[m[32m            }[m
+[32m+[m[32m        }[m
+[32m+[m
+[32m+[m[32m        // Run tests when page loads[m
+[32m+[m[32m        document.addEventListener('DOMContentLoaded', runTests);[m
+[32m+[m[32m    </script>[m
+[32m+[m[32m</body>[m
+[32m+[m[32m</html>[m
+\ No newline at end of file[m

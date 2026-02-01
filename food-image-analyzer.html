@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Image Analyzer - GutSense</title>
+    <script src="config.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            min-height: 600px;
+        }
+
+        .upload-section {
+            padding: 40px;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .results-section {
+            padding: 40px;
+            background: white;
+        }
+
+        .upload-area {
+            border: 3px dashed #4facfe;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .upload-area:hover {
+            border-color: #00f2fe;
+            background: #f0f8ff;
+            transform: translateY(-2px);
+        }
+
+        .upload-area.dragover {
+            border-color: #00f2fe;
+            background: #e6f3ff;
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #4facfe;
+            margin-bottom: 20px;
+        }
+
+        .upload-text {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .analyze-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 172, 254, 0.3);
+        }
+
+        .analyze-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #4facfe;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+        }
+
+        .food-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .food-name {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .confidence-bar {
+            background: rgba(255,255,255,0.3);
+            height: 8px;
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            background: #00f2fe;
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .reaction-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .reaction-excellent { background: #28a745; }
+        .reaction-suitable { background: #17a2b8; }
+        .reaction-caution { background: #ffc107; color: #333; }
+        .reaction-avoid { background: #dc3545; }
+
+        .analysis-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .analysis-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            background: white;
+            padding: 10px 15px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border-left: 4px solid #4facfe;
+        }
+
+        .alternatives-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .alternative-tag {
+            background: #4facfe;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .all-predictions {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .prediction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .prediction-bar {
+            width: 100px;
+            height: 6px;
+            background: #eee;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .prediction-fill {
+            height: 100%;
+            background: #4facfe;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .upload-section, .results-section {
+                padding: 20px;
+            }
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-bottom: 20px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍽️ Food Image Analyzer</h1>
+            <p>Upload a photo of your food and get instant gut health analysis</p>
+        </div>
+
+        <div class="main-content">
+            <div class="upload-section">
+                <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+                
+                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                    <div class="upload-icon">📸</div>
+                    <div class="upload-text">Click to upload food image</div>
+                    <div class="upload-hint">or drag and drop here</div>
+                </div>
+                
+                <input type="file" id="imageInput" accept="image/*">
+                
+                <div id="imagePreview" style="display: none;">
+                    <img id="previewImg" class="image-preview" alt="Food preview">
+                    <button id="analyzeBtn" class="analyze-btn">🔍 Analyze Food</button>
+                </div>
+
+                <div id="loading" class="loading">
+                    <div class="spinner"></div>
+                    <p>Analyzing your food image...</p>
+                    <p style="font-size: 0.9rem; color: #666;">This may take a few seconds</p>
+                </div>
+            </div>
+
+            <div class="results-section">
+                <div id="results" class="results">
+                    <!-- Results will be populated here -->
+                </div>
+                
+                <div id="placeholder" style="text-align: center; color: #666; padding: 50px 0;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">🍛</div>
+                    <h3>Upload a food image to get started</h3>
+                    <p>Our AI will identify the food and provide gut health analysis</p>
+                    
+                    <div style="margin-top: 30px;">
+                        <h4>Supported Foods:</h4>
+                        <div class="alternatives-list" style="justify-content: center; margin-top: 15px;">
+                            <span class="alternative-tag">Biryani</span>
+                            <span class="alternative-tag">Butter Chicken</span>
+                            <span class="alternative-tag">Dosa</span>
+                            <span class="alternative-tag">Idli</span>
+                            <span class="alternative-tag">Paneer Tikka</span>
+                            <span class="alternative-tag">Samosa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const placeholder = document.getElementById('placeholder');
+        const uploadArea = document.querySelector('.upload-area');
+
+        let selectedImage = null;
+
+        // Handle file input change
+        imageInput.addEventListener('change', handleImageSelect);
+
+        // Handle drag and drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                imageInput.files = files;
+                handleImageSelect();
+            }
+        });
+
+        // Handle analyze button click
+        analyzeBtn.addEventListener('click', analyzeFood);
+
+        function handleImageSelect() {
+            const file = imageInput.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    selectedImage = e.target.result;
+                    previewImg.src = selectedImage;
+                    imagePreview.style.display = 'block';
+                    placeholder.style.display = 'none';
+                    results.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        async function analyzeFood() {
+            if (!selectedImage) return;
+
+            // Show loading
+            loading.style.display = 'block';
+            analyzeBtn.disabled = true;
+            results.style.display = 'none';
+
+            try {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/analyze-food', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        image: selectedImage
+                    })
+                });
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                console.error('Analysis failed:', error);
+                displayError('Analysis failed. Please try again.');
+            } finally {
+                loading.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        }
+
+        function displayResults(data) {
+            const confidence = data.confidence || 0;
+            const reaction = data.reaction || 'caution';
+            
+            results.innerHTML = `
+                <div class="food-card">
+                    <div class="food-name">${data.name}</div>
+                    <div style="font-size: 1.1rem; opacity: 0.9;">${data.category || 'Unknown category'}</div>
+                    
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: ${confidence}%"></div>
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        Confidence: ${confidence}%
+                    </div>
+                    
+                    <div class="reaction-badge reaction-${reaction}">
+                        ${getReactionText(reaction)}
+                    </div>
+                </div>
+
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value">${data.spice_level || 'N/A'}/5</div>
+                        <div class="metric-label">Spice Level</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${data.gut_impact || 'Unknown'}</div>
+                        <div class="metric-label">Gut Impact</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value">${data.fermented ? 'Yes' : 'No'}</div>
+                        <div class="metric-label">Fermented</div>
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <h3>🧠 Analysis</h3>
+                    <p>${data.explanation}</p>
+                </div>
+
+                ${data.tips && data.tips.length > 0 ? `
+                <div class="analysis-section">
+                    <h3>💡 Tips</h3>
+                    <ul class="tips-list">
+                        ${data.tips.map(tip => `<li>${tip}</li>`).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+
+                ${data.alternatives && data.alternatives.length > 0 ? `
+                <div class="analysis-section">
+                    <h3>🔄 Healthier Alternatives</h3>
+                    <div class="alternatives-list">
+                        ${data.alternatives.map(alt => `<span class="alternative-tag">${alt}</span>`).join('')}
+                    </div>
+                </div>
+                ` : ''}
+
+                ${data.all_predictions && data.all_predictions.length > 0 ? `
+                <div class="all-predictions">
+                    <h3>🎯 All Predictions</h3>
+                    ${data.all_predictions.map(pred => `
+                        <div class="prediction-item">
+                            <span>${pred.food}</span>
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span>${Math.round(pred.confidence * 100)}%</span>
+                                <div class="prediction-bar">
+                                    <div class="prediction-fill" style="width: ${pred.confidence * 100}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                ` : ''}
+            `;
+
+            results.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+
+        function displayError(message) {
+            results.innerHTML = `
+                <div style="text-align: center; color: #dc3545; padding: 50px 0;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">❌</div>
+                    <h3>Analysis Failed</h3>
+                    <p>${message}</p>
+                    <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Try Again
+                    </button>
+                </div>
+            `;
+            results.style.display = 'block';
+        }
+
+        function getReactionText(reaction) {
+            const reactions = {
+                'excellent': '🟢 Excellent for gut health',
+                'suitable': '🟡 Suitable with caution',
+                'caution': '🟠 Eat with caution',
+                'avoid': '🔴 Avoid if sensitive'
+            };
+            return reactions[reaction] || '⚪ Unknown reaction';
+        }
+
+        // Test API connection on load
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/health');
+                const data = await response.json();
+                console.log('✅ Backend connected:', data);
+            } catch (error) {
+                console.error('❌ Backend connection failed:', error);
+            }
+        });
+    </script>
+</body>
+</html>
