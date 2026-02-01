@@ -152,6 +152,7 @@ class IndianFoodClassifier {
             if (!this.model) {
                 const loaded = await this.loadModel();
                 if (!loaded) {
+                    // Return setup instructions instead of error
                     return this.getFallbackPrediction();
                 }
             }
