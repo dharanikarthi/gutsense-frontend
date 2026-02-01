@@ -344,7 +344,7 @@
     <div class="container">
         <div class="header">
             <h1>🍽️ Food Image Analyzer</h1>
-            <p>Upload a photo of your food and get instant gut health analysis</p>
+            <p>Upload a photo of your food and get instant AI-powered gut health analysis - completely private and offline!</p>
         </div>
 
         <div class="main-content">
@@ -627,15 +627,7 @@
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
             console.log('🚀 Initializing GutSense Food Analyzer...');
-            
-            // Test backend connection (optional)
-            try {
-                const response = await fetch(CONFIG.API_BASE_URL + '/api/health');
-                const data = await response.json();
-                console.log('✅ Backend connected:', data);
-            } catch (error) {
-                console.log('⚠️ Backend not available, using client-side model only');
-            }
+            console.log('🔒 Running in client-side mode - your images stay private!');
             
             // Load TensorFlow.js model
             console.log('🧠 Loading AI model...');
@@ -649,8 +641,9 @@
             } else {
                 console.log('⚠️ AI model not available - see console for setup instructions');
                 const header = document.querySelector('.header p');
-                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">📝 Text Mode</span>';
+                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">📝 Setup Required</span>';
             }
+        });
         });
     </script>
 </body>
