@@ -469,12 +469,12 @@
 
                 console.log('🖼️ Image loaded, starting analysis...');
                 
-                // Try Gemini AI backend first, fallback to smart detection
+                // Try backend API first, fallback to smart detection
                 let data;
                 try {
-                    console.log('🧠 Using Gemini AI backend...');
+                    console.log('🧠 Using backend API...');
                     
-                    const response = await fetch(CONFIG.API_BASE_URL + '/api/analyze-food', {
+                    const response = await fetch(CONFIG.API_BASE_URL + '/api/analyze-food-simple', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -489,7 +489,7 @@
                     }
 
                     data = await response.json();
-                    console.log('✅ Gemini AI analysis complete:', data);
+                    console.log('✅ Backend analysis complete:', data);
                     
                 } catch (backendError) {
                     console.log('⚠️ Backend not available, using smart detection...', backendError.message);
@@ -655,23 +655,23 @@
             
             // Test backend connection
             try {
-                console.log('🧠 Testing Gemini AI backend...');
-                const response = await fetch(CONFIG.API_BASE_URL + '/api/health', {
+                console.log('🧠 Testing backend connection...');
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/test', {
                     method: 'GET'
                 });
                 
                 if (response.ok) {
-                    const healthData = await response.json();
-                    console.log('✅ Gemini AI backend available!', healthData);
+                    const testData = await response.json();
+                    console.log('✅ Backend available!', testData);
                     const header = document.querySelector('.header p');
-                    header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🧠 Gemini AI Ready</span>';
+                    header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🧠 Backend Ready</span>';
                 } else {
-                    throw new Error('Backend not responding');
+                    throw new Error(`Backend error: ${response.status}`);
                 }
             } catch (error) {
-                console.log('⚠️ Gemini backend not available, using smart detection fallback', error);
+                console.log('⚠️ Backend not available, using smart detection only', error);
                 const header = document.querySelector('.header p');
-                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🔍 Smart Detection Ready</span>';
+                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🔍 Smart Detection Only</span>';
             }
             
             // Initialize smart detection (always available as fallback)
