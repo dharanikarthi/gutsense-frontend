@@ -1,6 +1,10 @@
 // Configuration for GutSense Frontend
 const CONFIG = {
-    // API Configuration
+    // OpenAI Configuration - API key should be set via environment or user input
+    OPENAI_API_KEY: '', // Set this via environment variable or user input
+    OPENAI_API_URL: 'https://api.openai.com/v1/chat/completions',
+    
+    // API Configuration (Legacy - keeping for other features)
     API_BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
         ? 'http://localhost:8000'  // Local development
         : 'https://gutsense-backend.vercel.app',  // Production - Deployed backend URL
