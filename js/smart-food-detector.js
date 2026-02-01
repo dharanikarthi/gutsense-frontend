@@ -9,73 +9,70 @@ class SmartFoodDetector {
         this.canvas = document.createElement('canvas');
         this.ctx = this.canvas.getContext('2d');
         
-        // Food detection patterns based on visual characteristics
+        // Set canvas optimization
+        this.canvas.setAttribute('willReadFrequently', 'true');
+        
+        // Improved food detection patterns with better color ranges and weights
         this.foodPatterns = {
             "biryani": {
                 name: "Biryani",
                 colorSignatures: [
-                    { r: [180, 220], g: [140, 180], b: [80, 120] },  // Golden rice
-                    { r: [160, 200], g: [120, 160], b: [60, 100] },  // Saffron color
-                    { r: [140, 180], g: [100, 140], b: [40, 80] }    // Spiced rice
+                    { r: [180, 255], g: [140, 200], b: [60, 120], weight: 3 },  // Golden rice
+                    { r: [160, 220], g: [120, 180], b: [40, 100], weight: 2 },  // Saffron color
+                    { r: [200, 255], g: [160, 220], b: [80, 140], weight: 2 }   // Mixed spices
                 ],
-                textureFeatures: ["grainy", "mixed", "layered"],
-                shapeFeatures: ["elongated_grains", "mixed_ingredients"],
-                confidence: 0.85
+                keywords: ["rice", "grain", "mixed", "colorful"],
+                baseConfidence: 0.75
             },
             "butter chicken": {
                 name: "Butter Chicken",
                 colorSignatures: [
-                    { r: [200, 255], g: [120, 180], b: [80, 140] },  // Orange curry
-                    { r: [180, 220], g: [100, 160], b: [60, 120] },  // Tomato base
-                    { r: [220, 255], g: [180, 220], b: [140, 180] }  // Creamy sauce
+                    { r: [200, 255], g: [100, 180], b: [60, 140], weight: 4 },  // Orange curry
+                    { r: [180, 240], g: [80, 160], b: [40, 120], weight: 3 },   // Tomato base
+                    { r: [220, 255], g: [160, 220], b: [120, 180], weight: 2 }  // Creamy sauce
                 ],
-                textureFeatures: ["smooth", "saucy", "creamy"],
-                shapeFeatures: ["chunks", "sauce_pool"],
-                confidence: 0.88
+                keywords: ["sauce", "curry", "orange", "creamy"],
+                baseConfidence: 0.80
             },
             "dosa": {
                 name: "Dosa",
                 colorSignatures: [
-                    { r: [200, 255], g: [180, 220], b: [120, 160] },  // Golden brown
-                    { r: [180, 220], g: [160, 200], b: [100, 140] },  // Light brown
-                    { r: [220, 255], g: [200, 240], b: [140, 180] }   // Crispy edges
+                    { r: [180, 255], g: [160, 220], b: [100, 160], weight: 4 },  // Golden brown
+                    { r: [200, 255], g: [180, 240], b: [120, 180], weight: 3 },  // Light golden
+                    { r: [160, 200], g: [140, 180], b: [80, 120], weight: 2 }    // Darker edges
                 ],
-                textureFeatures: ["smooth", "flat", "crispy"],
-                shapeFeatures: ["circular", "flat", "thin"],
-                confidence: 0.92
+                keywords: ["flat", "round", "crispy", "golden"],
+                baseConfidence: 0.85
             },
             "idli": {
                 name: "Idli",
                 colorSignatures: [
-                    { r: [240, 255], g: [240, 255], b: [230, 255] },  // Pure white
-                    { r: [220, 245], g: [220, 245], b: [210, 240] },  // Off white
-                    { r: [200, 230], g: [200, 230], b: [190, 220] }   // Slightly gray
+                    { r: [220, 255], g: [220, 255], b: [210, 255], weight: 5 },  // Pure white
+                    { r: [200, 240], g: [200, 240], b: [190, 230], weight: 3 },  // Off white
+                    { r: [180, 220], g: [180, 220], b: [170, 210], weight: 2 }   // Light gray
                 ],
-                textureFeatures: ["smooth", "soft", "round"],
-                shapeFeatures: ["circular", "dome", "small"],
-                confidence: 0.90
+                keywords: ["white", "round", "soft", "steamed"],
+                baseConfidence: 0.90
             },
             "paneer tikka": {
                 name: "Paneer Tikka",
                 colorSignatures: [
-                    { r: [200, 255], g: [140, 200], b: [100, 160] },  // Grilled orange
-                    { r: [180, 220], g: [120, 180], b: [80, 140] },   // Spiced surface
-                    { r: [220, 255], g: [200, 240], b: [180, 220] }   // Paneer white
+                    { r: [180, 255], g: [120, 200], b: [80, 160], weight: 3 },   // Grilled orange
+                    { r: [200, 255], g: [180, 240], b: [160, 220], weight: 4 },  // White paneer
+                    { r: [160, 220], g: [100, 180], b: [60, 140], weight: 2 }    // Spiced surface
                 ],
-                textureFeatures: ["chunky", "grilled", "marinated"],
-                shapeFeatures: ["cubes", "skewered", "charred"],
-                confidence: 0.86
+                keywords: ["cubes", "grilled", "white", "chunks"],
+                baseConfidence: 0.78
             },
             "samosa": {
                 name: "Samosa",
                 colorSignatures: [
-                    { r: [180, 220], g: [140, 180], b: [80, 120] },   // Golden brown
-                    { r: [160, 200], g: [120, 160], b: [60, 100] },   // Deep fried
-                    { r: [200, 240], g: [160, 200], b: [100, 140] }   // Light crispy
+                    { r: [160, 220], g: [120, 180], b: [60, 120], weight: 4 },   // Golden brown
+                    { r: [180, 240], g: [140, 200], b: [80, 140], weight: 3 },   // Light fried
+                    { r: [140, 180], g: [100, 140], b: [40, 80], weight: 2 }     // Dark crispy
                 ],
-                textureFeatures: ["crispy", "triangular", "fried"],
-                shapeFeatures: ["triangular", "folded", "crispy"],
-                confidence: 0.89
+                keywords: ["triangular", "fried", "golden", "crispy"],
+                baseConfidence: 0.82
             }
         };
 
@@ -151,24 +148,30 @@ class SmartFoodDetector {
             const imageData = this.ctx.getImageData(0, 0, 224, 224);
             const pixels = imageData.data;
             
-            // Analyze color distribution
-            const colorAnalysis = this.analyzeColors(pixels);
+            // Analyze colors with improved algorithm
+            const colorStats = this.analyzeColors(pixels);
             
-            // Analyze texture and shape
-            const textureAnalysis = this.analyzeTexture(pixels);
+            // Analyze texture
+            const textureStats = this.analyzeTexture(pixels);
             
-            // Match against food patterns
-            const matches = this.matchFoodPatterns(colorAnalysis, textureAnalysis);
-            
-            // Get best match
-            const bestMatch = matches.reduce((best, current) => 
-                current.confidence > best.confidence ? current : best
-            );
+            // Match against food patterns with improved scoring
+            const matches = this.matchFoodPatterns(colorStats, textureStats);
             
             console.log('🎯 Detection results:', matches);
-            console.log('🏆 Best match:', bestMatch);
+            console.log('🏆 Best match:', matches[0]);
+            console.log('📊 Color stats:', colorStats);
+            console.log('🖼️ Texture stats:', textureStats);
             
-            // Generate analysis
+            // Get best match with minimum confidence threshold
+            let bestMatch = matches[0];
+            
+            // If confidence is too low, use generic analysis
+            if (bestMatch.confidence < 0.3) {
+                console.log('⚠️ Low confidence, using generic analysis');
+                return this.getGenericAnalysis();
+            }
+            
+            // Generate detailed analysis
             return this.generateAnalysis(bestMatch);
             
         } catch (error) {
@@ -177,44 +180,13 @@ class SmartFoodDetector {
         }
     }
 
-    analyzeColors(pixels) {
-        const colorBuckets = {};
-        const totalPixels = pixels.length / 4;
-        
-        // Sample every 4th pixel for performance
-        for (let i = 0; i < pixels.length; i += 16) {
-            const r = pixels[i];
-            const g = pixels[i + 1];
-            const b = pixels[i + 2];
-            
-            // Create color bucket key
-            const rBucket = Math.floor(r / 20) * 20;
-            const gBucket = Math.floor(g / 20) * 20;
-            const bBucket = Math.floor(b / 20) * 20;
-            const key = `${rBucket}-${gBucket}-${bBucket}`;
-            
-            colorBuckets[key] = (colorBuckets[key] || 0) + 1;
-        }
-        
-        // Get dominant colors
-        const dominantColors = Object.entries(colorBuckets)
-            .sort(([,a], [,b]) => b - a)
-            .slice(0, 5)
-            .map(([key, count]) => {
-                const [r, g, b] = key.split('-').map(Number);
-                return { r, g, b, percentage: (count / totalPixels) * 100 };
-            });
-        
-        return dominantColors;
-    }
-
     analyzeTexture(pixels) {
-        // Simple texture analysis based on color variance
         let variance = 0;
         let brightness = 0;
-        const sampleSize = pixels.length / 16; // Sample every 4th pixel
+        let edgeCount = 0;
+        const sampleSize = pixels.length / 32;
         
-        for (let i = 0; i < pixels.length; i += 16) {
+        for (let i = 0; i < pixels.length; i += 32) {
             const r = pixels[i];
             const g = pixels[i + 1];
             const b = pixels[i + 2];
@@ -222,10 +194,13 @@ class SmartFoodDetector {
             const gray = (r + g + b) / 3;
             brightness += gray;
             
-            // Calculate local variance
-            if (i > 16) {
-                const prevGray = (pixels[i-16] + pixels[i-15] + pixels[i-14]) / 3;
-                variance += Math.abs(gray - prevGray);
+            // Calculate local variance for texture
+            if (i > 32) {
+                const prevGray = (pixels[i-32] + pixels[i-31] + pixels[i-30]) / 3;
+                const diff = Math.abs(gray - prevGray);
+                variance += diff;
+                
+                if (diff > 30) edgeCount++; // Edge detection
             }
         }
         
@@ -233,57 +208,138 @@ class SmartFoodDetector {
         variance /= sampleSize;
         
         return {
-            brightness: brightness / 255,
+            brightness: brightness,
             variance: variance / 255,
-            texture: variance > 30 ? 'rough' : variance > 15 ? 'medium' : 'smooth'
+            edgeCount: edgeCount / sampleSize,
+            texture: variance > 40 ? 'rough' : variance > 20 ? 'medium' : 'smooth'
         };
     }
 
-    matchFoodPatterns(colorAnalysis, textureAnalysis) {
+    analyzeColors(pixels) {
+        const colorStats = {
+            totalPixels: 0,
+            avgR: 0, avgG: 0, avgB: 0,
+            dominantColors: [],
+            brightness: 0,
+            colorVariance: 0
+        };
+        
+        let rSum = 0, gSum = 0, bSum = 0;
+        const colorMap = new Map();
+        
+        // Analyze every 8th pixel for better performance
+        for (let i = 0; i < pixels.length; i += 32) {
+            const r = pixels[i];
+            const g = pixels[i + 1];
+            const b = pixels[i + 2];
+            
+            rSum += r;
+            gSum += g;
+            bSum += b;
+            colorStats.totalPixels++;
+            
+            // Group similar colors
+            const colorKey = `${Math.floor(r/15)*15}-${Math.floor(g/15)*15}-${Math.floor(b/15)*15}`;
+            colorMap.set(colorKey, (colorMap.get(colorKey) || 0) + 1);
+        }
+        
+        // Calculate averages
+        colorStats.avgR = rSum / colorStats.totalPixels;
+        colorStats.avgG = gSum / colorStats.totalPixels;
+        colorStats.avgB = bSum / colorStats.totalPixels;
+        colorStats.brightness = (colorStats.avgR + colorStats.avgG + colorStats.avgB) / 3;
+        
+        // Get top 5 dominant colors
+        colorStats.dominantColors = Array.from(colorMap.entries())
+            .sort(([,a], [,b]) => b - a)
+            .slice(0, 5)
+            .map(([key, count]) => {
+                const [r, g, b] = key.split('-').map(Number);
+                return { 
+                    r, g, b, 
+                    percentage: (count / colorStats.totalPixels) * 100,
+                    count 
+                };
+            });
+        
+        return colorStats;
+    }
+
+    matchFoodPatterns(colorStats, textureStats) {
         const matches = [];
         
         for (const [foodKey, pattern] of Object.entries(this.foodPatterns)) {
-            let colorScore = 0;
-            let textureScore = 0;
+            let totalScore = 0;
+            let maxColorMatch = 0;
             
-            // Color matching
-            for (const dominantColor of colorAnalysis) {
-                for (const signature of pattern.colorSignatures) {
-                    if (dominantColor.r >= signature.r[0] && dominantColor.r <= signature.r[1] &&
-                        dominantColor.g >= signature.g[0] && dominantColor.g <= signature.g[1] &&
-                        dominantColor.b >= signature.b[0] && dominantColor.b <= signature.b[1]) {
-                        colorScore += dominantColor.percentage;
+            // Color signature matching with weights
+            for (const signature of pattern.colorSignatures) {
+                let colorMatch = 0;
+                
+                // Check against dominant colors
+                for (const domColor of colorStats.dominantColors) {
+                    if (this.isColorInRange(domColor, signature)) {
+                        colorMatch += domColor.percentage * (signature.weight || 1);
                     }
                 }
+                
+                // Check against average color
+                if (this.isColorInRange(colorStats, signature)) {
+                    colorMatch += 20 * (signature.weight || 1);
+                }
+                
+                maxColorMatch = Math.max(maxColorMatch, colorMatch);
             }
             
-            // Texture matching
-            if (pattern.textureFeatures.includes(textureAnalysis.texture)) {
-                textureScore = 30;
+            // Brightness-based adjustments
+            let brightnessBonus = 0;
+            if (foodKey === 'idli' && colorStats.brightness > 200) {
+                brightnessBonus = 30; // Idli is very white
+            } else if (foodKey === 'dosa' && colorStats.brightness > 150 && colorStats.brightness < 220) {
+                brightnessBonus = 25; // Dosa is golden
+            } else if (foodKey === 'butter chicken' && colorStats.brightness > 120 && colorStats.brightness < 180) {
+                brightnessBonus = 20; // Butter chicken is medium bright
+            } else if (foodKey === 'samosa' && colorStats.brightness > 100 && colorStats.brightness < 170) {
+                brightnessBonus = 20; // Samosa is golden brown
             }
             
-            // Brightness adjustments for specific foods
-            if (foodKey === 'idli' && textureAnalysis.brightness > 0.8) {
-                textureScore += 20; // Idli is very white
-            }
-            if (foodKey === 'dosa' && textureAnalysis.brightness > 0.6 && textureAnalysis.brightness < 0.9) {
-                textureScore += 15; // Dosa is golden
+            // Texture bonus
+            let textureBonus = 0;
+            if (foodKey === 'idli' && textureStats.variance < 0.3) {
+                textureBonus = 15; // Idli is smooth
+            } else if (foodKey === 'dosa' && textureStats.variance > 0.2 && textureStats.variance < 0.6) {
+                textureBonus = 10; // Dosa has medium texture
             }
             
-            const totalScore = (colorScore * 0.7 + textureScore * 0.3);
-            const confidence = Math.min(totalScore / 100, 0.95);
+            // Calculate final score
+            totalScore = maxColorMatch + brightnessBonus + textureBonus;
+            
+            // Apply base confidence
+            const confidence = Math.min((totalScore / 100) * pattern.baseConfidence, 0.95);
             
             matches.push({
                 food: foodKey,
                 name: pattern.name,
-                confidence: confidence,
-                colorScore,
-                textureScore,
-                totalScore
+                confidence: Math.max(confidence, 0.1), // Minimum confidence
+                colorScore: maxColorMatch,
+                brightnessBonus,
+                textureBonus,
+                totalScore,
+                details: {
+                    avgBrightness: colorStats.brightness,
+                    textureVariance: textureStats.variance,
+                    dominantColors: colorStats.dominantColors.slice(0, 2)
+                }
             });
         }
         
         return matches.sort((a, b) => b.confidence - a.confidence);
+    }
+    
+    isColorInRange(color, signature) {
+        return color.r >= signature.r[0] && color.r <= signature.r[1] &&
+               color.g >= signature.g[0] && color.g <= signature.g[1] &&
+               color.b >= signature.b[0] && color.b <= signature.b[1];
     }
 
     generateAnalysis(match) {
