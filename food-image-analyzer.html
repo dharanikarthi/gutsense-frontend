@@ -656,19 +656,20 @@
             // Test backend connection
             try {
                 console.log('🧠 Testing Gemini AI backend...');
-                const response = await fetch(CONFIG.API_BASE_URL + '/api/analyze-food', {
-                    method: 'OPTIONS'
+                const response = await fetch(CONFIG.API_BASE_URL + '/api/health', {
+                    method: 'GET'
                 });
                 
                 if (response.ok) {
-                    console.log('✅ Gemini AI backend available!');
+                    const healthData = await response.json();
+                    console.log('✅ Gemini AI backend available!', healthData);
                     const header = document.querySelector('.header p');
                     header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🧠 Gemini AI Ready</span>';
                 } else {
                     throw new Error('Backend not responding');
                 }
             } catch (error) {
-                console.log('⚠️ Gemini backend not available, using smart detection fallback');
+                console.log('⚠️ Gemini backend not available, using smart detection fallback', error);
                 const header = document.querySelector('.header p');
                 header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🔍 Smart Detection Ready</span>';
             }
