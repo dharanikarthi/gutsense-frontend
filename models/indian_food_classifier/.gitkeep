@@ -1,0 +1,5 @@
+# Place your converted TensorFlow.js model files here
+# 
+# After converting your .h5 model, you should have:
+# - model.json
+# - group1-shard1of1.bin (or similar weight files)

@@ -4,7 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Food Image Analyzer - GutSense</title>
+    
+    <!-- TensorFlow.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+    
+    <!-- App Configuration -->
     <script src="config.js"></script>
+    
+    <!-- Model Loader -->
+    <script src="js/model-loader.js"></script>
     <style>
         * {
             margin: 0;
@@ -452,17 +460,20 @@
             results.style.display = 'none';
 
             try {
-                const response = await fetch(CONFIG.API_BASE_URL + '/api/analyze-food', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        image: selectedImage
-                    })
+                // Create an image element from the selected image
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                
+                await new Promise((resolve, reject) => {
+                    img.onload = resolve;
+                    img.onerror = reject;
+                    img.src = selectedImage;
                 });
 
-                const data = await response.json();
+                console.log('🖼️ Image loaded, starting analysis...');
+                
+                // Use client-side model for prediction
+                const data = await window.indianFoodClassifier.predictFood(img);
                 displayResults(data);
 
             } catch (error) {
@@ -478,6 +489,40 @@
             const confidence = data.confidence || 0;
             const reaction = data.reaction || 'caution';
             
+            // Special handling for setup instructions
+            if (data.category === 'setup' || data.setupInstructions) {
+                results.innerHTML = `
+                    <div class="food-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                        <div class="food-name">${data.name}</div>
+                        <div style="font-size: 1.1rem; opacity: 0.9;">One-time setup required</div>
+                        
+                        <div style="margin: 20px 0; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                            <h3 style="margin-bottom: 15px;">🚀 Quick Setup (2 minutes)</h3>
+                            <ol style="text-align: left; padding-left: 20px;">
+                                <li style="margin-bottom: 10px;">Place <code>indian_food_classifier.h5</code> in root folder</li>
+                                <li style="margin-bottom: 10px;">Run: <code>python convert_model.py</code></li>
+                                <li style="margin-bottom: 10px;">Refresh this page</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="analysis-section" style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px;">
+                            <h3>✨ Why This Setup?</h3>
+                            <p>${data.explanation}</p>
+                        </div>
+                        
+                        <div class="analysis-section" style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 15px;">
+                            <h3>🔒 Privacy Benefits</h3>
+                            <ul class="tips-list">
+                                ${data.tips.map(tip => `<li>${tip}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                results.style.display = 'block';
+                return;
+            }
+            
+            // Regular food analysis display
             results.innerHTML = `
                 <div class="food-card">
                     <div class="food-name">${data.name}</div>
@@ -497,11 +542,11 @@
 
                 <div class="metrics-grid">
                     <div class="metric-card">
-                        <div class="metric-value">${data.spice_level || 'N/A'}/5</div>
+                        <div class="metric-value">${data.spiceLevel || data.spice_level || 'N/A'}/5</div>
                         <div class="metric-label">Spice Level</div>
                     </div>
                     <div class="metric-card">
-                        <div class="metric-value">${data.gut_impact || 'Unknown'}</div>
+                        <div class="metric-value">${data.gutImpact || data.gut_impact || 'Unknown'}</div>
                         <div class="metric-label">Gut Impact</div>
                     </div>
                     <div class="metric-card">
@@ -533,10 +578,10 @@
                 </div>
                 ` : ''}
 
-                ${data.all_predictions && data.all_predictions.length > 0 ? `
+                ${data.allPredictions && data.allPredictions.length > 0 ? `
                 <div class="all-predictions">
                     <h3>🎯 All Predictions</h3>
-                    ${data.all_predictions.map(pred => `
+                    ${data.allPredictions.slice(0, 3).map(pred => `
                         <div class="prediction-item">
                             <span>${pred.food}</span>
                             <div style="display: flex; align-items: center; gap: 10px;">
@@ -579,14 +624,32 @@
             return reactions[reaction] || '⚪ Unknown reaction';
         }
 
-        // Test API connection on load
+        // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🚀 Initializing GutSense Food Analyzer...');
+            
+            // Test backend connection (optional)
             try {
                 const response = await fetch(CONFIG.API_BASE_URL + '/api/health');
                 const data = await response.json();
                 console.log('✅ Backend connected:', data);
             } catch (error) {
-                console.error('❌ Backend connection failed:', error);
+                console.log('⚠️ Backend not available, using client-side model only');
+            }
+            
+            // Load TensorFlow.js model
+            console.log('🧠 Loading AI model...');
+            const modelLoaded = await window.indianFoodClassifier.loadModel();
+            
+            if (modelLoaded) {
+                console.log('✅ AI model loaded successfully!');
+                // Add model status indicator
+                const header = document.querySelector('.header p');
+                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🧠 AI Ready</span>';
+            } else {
+                console.log('⚠️ AI model not available - see console for setup instructions');
+                const header = document.querySelector('.header p');
+                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">📝 Text Mode</span>';
             }
         });
     </script>
