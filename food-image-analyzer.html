@@ -6,10 +6,10 @@
     <title>Food Image Analyzer - GutSense</title>
     
     <!-- App Configuration -->
-    <script src="config.js"></script>
+    <script src="config.js?v=2"></script>
     
     <!-- Vercel Food Analyzer (Serverless OpenAI) -->
-    <script src="js/vercel-food-analyzer.js"></script>
+    <script src="js/vercel-food-analyzer.js?v=2"></script>
     <style>
         * {
             margin: 0;
@@ -591,7 +591,8 @@
 
         // Initialize app on load
         document.addEventListener('DOMContentLoaded', async () => {
-            console.log('🚀 Initializing GutSense Food Analyzer with Vercel OpenAI...');
+            console.log('🚀 Initializing GutSense Food Analyzer with Vercel OpenAI (v2.0)...');
+            console.log('📍 Using Vercel serverless function - no API key prompts needed');
             
             // Test Vercel function connection
             try {

@@ -72,4 +72,4 @@ class VercelFoodAnalyzer {
 // Create global instance
 window.vercelFoodAnalyzer = new VercelFoodAnalyzer();
 
-console.log('🚀 Vercel Food Analyzer initialized');
+console.log('🚀 Vercel Food Analyzer initialized (v2.0) - No API key required!');
