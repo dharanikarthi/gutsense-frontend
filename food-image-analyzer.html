@@ -11,7 +11,10 @@
     <!-- App Configuration -->
     <script src="config.js"></script>
     
-    <!-- Model Loader -->
+    <!-- Smart Food Detector (Computer Vision) -->
+    <script src="js/smart-food-detector.js"></script>
+    
+    <!-- Model Loader (Fallback for ML model) -->
     <script src="js/model-loader.js"></script>
     <style>
         * {
@@ -344,7 +347,7 @@
     <div class="container">
         <div class="header">
             <h1>🍽️ Food Image Analyzer</h1>
-            <p>Upload a photo of your food and get instant AI-powered gut health analysis - completely private and offline!</p>
+            <p>Upload a photo of your food and get instant AI-powered gut health analysis - works completely offline!</p>
         </div>
 
         <div class="main-content">
@@ -472,8 +475,22 @@
 
                 console.log('🖼️ Image loaded, starting analysis...');
                 
-                // Use client-side model for prediction
-                const data = await window.indianFoodClassifier.predictFood(img);
+                // Try ML model first, fallback to smart detection
+                let data;
+                try {
+                    // Check if ML model is available
+                    if (window.indianFoodClassifier && window.indianFoodClassifier.model) {
+                        console.log('🧠 Using ML model...');
+                        data = await window.indianFoodClassifier.predictFood(img);
+                    } else {
+                        throw new Error('ML model not available');
+                    }
+                } catch (mlError) {
+                    console.log('🔍 ML model not available, using smart detection...');
+                    // Use smart computer vision detection
+                    data = await window.smartFoodDetector.analyzeImage(img);
+                }
+                
                 displayResults(data);
 
             } catch (error) {
@@ -629,19 +646,21 @@
             console.log('🚀 Initializing GutSense Food Analyzer...');
             console.log('🔒 Running in client-side mode - your images stay private!');
             
-            // Load TensorFlow.js model
-            console.log('🧠 Loading AI model...');
+            // Initialize smart detection (always available)
+            console.log('🔍 Smart detection system ready!');
+            
+            // Try to load TensorFlow.js model (optional enhancement)
+            console.log('🧠 Checking for AI model...');
             const modelLoaded = await window.indianFoodClassifier.loadModel();
             
             if (modelLoaded) {
-                console.log('✅ AI model loaded successfully!');
-                // Add model status indicator
+                console.log('✅ AI model loaded successfully! Using ML + Smart Detection');
                 const header = document.querySelector('.header p');
-                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🧠 AI Ready</span>';
+                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🧠 AI + Smart Detection</span>';
             } else {
-                console.log('⚠️ AI model not available - see console for setup instructions');
+                console.log('🔍 Using Smart Detection (Computer Vision)');
                 const header = document.querySelector('.header p');
-                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">📝 Setup Required</span>';
+                header.innerHTML += ' <span style="background: rgba(255,255,255,0.2); padding: 4px 8px; border-radius: 12px; font-size: 0.9rem;">🔍 Smart Detection Ready</span>';
             }
         });
     </script>
